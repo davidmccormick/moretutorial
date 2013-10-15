@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Authentication" do
 	subject { page}
 	describe "#signin page" do
-		before { visit signin_path }
+		before { visit new_user_session_path }
 		
 		it "has css \"title\" with text \"Sign in\"" do
 			expect(page).to have_selector('h1', text: "Sign in")
@@ -12,7 +12,7 @@ describe "Authentication" do
 	end
 	
 	describe "when signing in" do
-		before { visit signin_path }
+		before { visit new_user_session_path }
 		
 		context "with invalid credentials" do
 			before { click_button "Sign in" }
@@ -44,7 +44,7 @@ describe "Authentication" do
 				expect(page).to have_link('Profile', href: user_path(user))
 				expect(page).to have_link('Settings', href: edit_user_path(user))
 				expect(page).to have_link('Sign out', href: signout_path)
-				expect(page).to_not have_link('Sign in', href: signin_path)
+				expect(page).to_not have_link('Sign in', href: new_user_session_path)
 			end
 	
 			describe "then if we sign out" do
@@ -75,7 +75,7 @@ describe "Authentication" do
 				describe "when submitting the update action" do
 					before { put user_path(user) }
 					it "redirects you to the Sign In page" do
-						 expect(response).to redirect_to(signin_path)
+						 expect(response).to redirect_to(new_user_session_path)
 					end
 				end
 				
@@ -104,12 +104,12 @@ describe "Authentication" do
 				describe "in the Relationship controller" do
 					describe "submitting to the create action" do
 						before { post relationships_path }
-						specify { response.should redirect_to(signin_path) }
+						specify { response.should redirect_to(new_user_session_path) }
 					end
 					
 					describe "submitting the destroy action" do
 						before { delete relationship_path(1) }
-						specify { response.should redirect_to(signin_path) }
+						specify { response.should redirect_to(new_user_session_path) }
 					end
 				end
 			end
@@ -155,7 +155,7 @@ describe "Authentication" do
 			context "when not signed in" do
 				describe "posting to create" do
 					before {  post microposts_path }
-					specify { expect(response).to redirect_to(signin_path) }
+					specify { expect(response).to redirect_to(new_user_session_path) }
 				end
 				
 				describe "deleting to destroy" do
@@ -164,7 +164,7 @@ describe "Authentication" do
 						delete micropost_path(micropost)
 					}
 					
-					it { expect(response).to redirect_to(signin_path) }
+					it { expect(response).to redirect_to(new_user_session_path) }
 
 				end
 			end

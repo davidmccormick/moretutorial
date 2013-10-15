@@ -5,7 +5,7 @@ describe RelationshipsController do
 	let(:user) { FactoryGirl.create(:user) }
 	let(:other_user) { FactoryGirl.create(:user) }
 	
-	before { sign_in_req user }
+	before { sign_in(:user, user) }
 	
 	describe "creating a relationship with Ajax" do
 		it "should increment the Relationship count" do

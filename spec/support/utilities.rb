@@ -1,14 +1,14 @@
 	include ApplicationHelper
 	
 	def sign_in_capy(user)
-		visit signin_path
-		fill_in "Email", with: user.email 
-		fill_in "Password", with: user.password
-		click_button "Sign in"
+		visit new_user_session_path
+		fill_in "user[email]", with: user.email 
+		fill_in "user[password]", with: user.password
+		click_button "Sign In"
 	end
 	
 	def sign_in_req(user)
 		# Sign in when not using Capybara as well
-		cookies[:remember_token] = user.remember_token
+		#cookies[:remember_token] = user.remember_token
 	end
 	
