@@ -121,28 +121,6 @@ describe User do
  		before { @user.password_confirmation = nil }
  		it { should_not be_valid }
  	end
- 
- 	describe "return value of the authenticate method" do
- 		before { @user.save }
- 		let(:found_user) { User.find_by_email(@user.email) }
- 		
- 		describe "with valid password" do
- 			it { should == found_user.authenticate(@user.password) }
- 		end
- 		
- 		describe "with an invalid password" do
- 			let(:user_invalid_password) { found_user.authenticate("invalidpassword") }
- 			it { should_not == user_invalid_password }
- 			it "unathenticated user should be nil" do
- 				user_invalid_password.should be_false
- 			end
- 		end
- 	end
- 
- 	describe "check remember token is not empty when saving" do
- 		before { @user.save }
- 		its(:remember_token) { should_not be_blank }
- 	end
  		
  	describe "micropost associations" do
  		before { @user.save }

@@ -9,27 +9,28 @@ class UsersController < ApplicationController
 		@users = User.order('name ASC').paginate(page: params[:page])
 	end
 
-  def show
+	def show
 		@user = User.find(params[:id])
 		@microposts = @user.microposts.paginate(page: params[:page])
-  end
+	end
   
-  def new
-  		@user = User.new
-  end
+	# NOW CREATED IN THE DEVISE CONTROLLER
+	#def new
+	#		@user = User.new
+	#end
   
-  def create
-  	@user = User.new(user_params)
-  	if @user.save
-  		sign_in @user
-  		flash[:success] = "Welcome to the Sample App!"
-  		redirect_to @user
-  	else
-  		render 'new'
-  	end
-  end
+	#def create
+		#@user = User.new(user_params)
+		#if @user.save
+			##sign_in @user
+			#flash[:success] = "Please confirm your email address and then sign in!"
+			#redirect_to root_path
+		#else
+			#render 'new'
+		#end
+	#end
   
-  def destroy
+	def destroy
   		user = User.find(params[:id])
   		if ( user != current_user )
   			user.destroy
@@ -39,31 +40,32 @@ class UsersController < ApplicationController
   			flash[:error] = "You shouldn't try to destory yourself!"
   			redirect_to root_path
   		end
-  	end
+	end
   
-  def edit
-  	#removed because this is done in correct_user before_filter 
-  	#@user = User.find(params[:id])
-  end
+	# NOW EDITED IN THE DEVISE CONTROLLER
+	#def edit
+		#removed because this is done in correct_user before_filter 
+		#@user = User.find(params[:id])
+	#end
   
-  def update
-  	#removed because this is done in correct_user before_filter 
-  	#@user = User.find(params[:id])
-  	if @user.update_attributes(user_params)
-  		flash[:success] = "Profile updated"
-  		sign_in @user
-  		redirect_to @user
-  	else
-  		render 'edit'
-  	end
-  end
+	#def update
+	#	#removed because this is done in correct_user before_filter 
+		#@user = User.find(params[:id])
+		#if @user.update_attributes(user_params).skip_confirmation!
+		#	flash[:success] = "Profile updated"
+		#	sign_in @user, :bypass => true
+		#	redirect_to @user
+		#else
+		#	render 'edit'
+		#end
+	#end
   
-  def following
+	def following
   		@title = "Following"
   		@user = User.find(params[:id])
   		@users = @user.followed_users.paginate(page: params[:page])
   		render 'show_follow'
-  end
+	end
   
 	def followers
   		@title = "Followers"
