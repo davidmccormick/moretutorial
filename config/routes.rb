@@ -9,7 +9,7 @@ SampleApp::Application.routes.draw do
   get '/contact', to: 'static_pages#contact'
 
 	# users pages
-	resources :users do
+	resources :users, only: [:index, :show, :destroy] do
 		member do
 			get :following, :followers
 		end

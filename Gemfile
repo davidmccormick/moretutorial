@@ -22,6 +22,7 @@ group :test do
 	gem 'rspec-rails'
 	gem 'guard-rspec'
 	gem 'capybara'
+	gem 'launchy'
 	gem 'rb-inotify'
 	gem 'libnotify'
 	gem 'factory_girl_rails'

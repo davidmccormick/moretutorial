@@ -8,10 +8,12 @@ describe "User Pages" do
 	
 	describe "index" do
 		
-		before do
+		before(:each) do
 			sign_in_capy FactoryGirl.create(:user)
 			visit users_path
 		end
+		
+		after(:each) { sign_out_capy }
 		
 		it { should have_title("All users") }
 		it { should have_selector('h1', text: "All users") }
@@ -41,10 +43,13 @@ describe "User Pages" do
 			it { should_not have_link('delete') }
 			
 			describe "as an admin user" do
-				let(:admin) {FactoryGirl.create(:admin) }
+				let(:admin) { FactoryGirl.create(:admin) }
 				
 				before do
+					sign_out_capy
+					#puts "admin user is #{admin.name}"
 					sign_in_capy admin
+					#puts "#{page.body}"
 					visit users_path
 				end
 				
@@ -59,16 +64,18 @@ describe "User Pages" do
 	end
 	
   describe "Signup page" do
-  	before { visit signup_path }
+  	before { visit new_user_registration_path }
   	
     it { should have_selector('h1', :text => 'Sign Up') }
     it { should have_title("#{base_title} | Sign Up" ) }
   end
   
   describe "signup" do
-  	before { visit signup_path }
+  	before { 
+		visit new_user_registration_path
+	}
   	
-  	let(:submit) { "Create My Account" }
+  	let(:submit) { "Sign up" }
   	
   	describe "with invalid information" do
   		it "should not create a user" do
@@ -88,7 +95,7 @@ describe "User Pages" do
   			fill_in "Name", with: "Example User"
   			fill_in "Email", with: "user@example.com"
   			fill_in "Password", with: "foobar"
-  			fill_in "Confirm Password", with: "foobar"
+  			fill_in "Password confirmation", with: "foobar"
   		end
   		
   		it "should create a user" do
@@ -97,11 +104,7 @@ describe "User Pages" do
   	
   		describe "after saving the user" do
   			before { click_button submit }
-  			let(:user) { User.find_by_email('user@example.com') }
-  		
-  			it { should have_title(user.name) }
-  			it { should have_selector('div.alert.alert-success', text: "Welcome") }
-  			it { should have_link("Sign out") }
+  			it { should have_selector('div.alert.alert-notice', text: "A message with a confirmation link has been sent to your email address.") }
   		end
   	end
   end
@@ -177,7 +180,7 @@ describe "User Pages" do
   	let(:user) { FactoryGirl.create(:user) }
   	before do
   		sign_in_capy user
-  		visit edit_user_path(user)
+  		visit edit_user_registration_path(user)
   	end
   	
   	describe "page" do
@@ -202,14 +205,17 @@ describe "User Pages" do
   			fill_in "Email", with: new_email
   			fill_in "Password", with: user.password
   			fill_in "Confirm Password", with: user.password
+  			fill_in "Current Password", with: user.password
   			click_button "Save changes"
   		end
   		
-  		it { should have_title(new_name) }
-  		it { should have_selector('div.alert.alert-success') }
-  		it { should have_link('Sign out', href: signout_path) }
+
+  		it { should have_selector('div.alert', text: "You updated your account successfully") }
+  		it {
+				should have_link('Sign out', href: destroy_user_session_path) 
+		}
   		specify { user.reload.name.should == new_name }
-  		specify { user.reload.email.should == new_email }
+  		specify { user.reload.unconfirmed_email.should == new_email }
   	end
   end
   
